@@ -1,0 +1,12 @@
+
+.el-header {
+  border: 1px solid #B4BCCC;
+  display: block;
+  height: auto;
+}
+.el-aside {
+  border: 1px solid #dcdfe6;
+}
+.el-tree-node__content {
+  height: 45px;
+}

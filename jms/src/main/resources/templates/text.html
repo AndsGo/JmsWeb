@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8"></meta>
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"></meta>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"></meta>
+    <title>添加对话</title>
+    <style>
+        .msg{
+            color:red;
+        }
+        .form{
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+        }
+        input{
+            border-radius: 4px;
+            border: 1px solid #dcdfe6;
+            box-sizing: border-box;
+            color: #606266;
+            display: inline-block;
+            font-size: inherit;
+            height: 40px;
+            line-height: 40px;
+            outline: none;
+            padding: 0 15px;
+            transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+        }
+        textarea{
+            display: inline-block;
+            resize: vertical;
+            padding: 5px 15px;
+            line-height: 1.5;
+            box-sizing: border-box;
+            width: 100%;
+            font-size: inherit;
+            color: #606266;
+            background-color: #fff;
+            background-image: none;
+            border: 1px solid #dcdfe6;
+            border-radius: 4px;
+            transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+            height: 100px;
+        }
+        .dec{
+            font-size: inherit;
+            line-height: 40px;
+        }
+
+    </style>
+</head>
+<body>
+<div class="form">
+    <form action="addText" method="post" target="nm_iframe">
+        <div  class="dec">类型:<input type="text" name="textType"></input></div>
+        <div  class="dec">文章名称:<input type="text" name="textName"></input></div>
+        <div  class="dec">文章内容:<textarea name="textContent" >请在此处输入文本...</textarea> </div>
+        <div><input type="submit" id="add" value="添加"  onclick="return check(this.form)"></input></div>
+    </form>
+</div>
+<script type="text/javascript">
+    function check(from){
+        console.log(from)
+        if(from.textName==''){
+            alert('输入不能为空');
+            return false;
+        }else if(from.textContent==''){
+            alert('输出不能为空');
+            return false;
+        }
+        return true;
+    }
+</script>
+<iframe id="id_iframe" name="nm_iframe" style="display:none;"></iframe>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8"></meta>
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"></meta>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"></meta>
+    <title>添加对话</title>
+    <style>
+        .msg{
+            color:red;
+        }
+        .form{
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+        }
+        input{
+            border-radius: 4px;
+            border: 1px solid #dcdfe6;
+            box-sizing: border-box;
+            color: #606266;
+            display: inline-block;
+            font-size: inherit;
+            height: 40px;
+            line-height: 40px;
+            outline: none;
+            padding: 0 15px;
+            transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+        }
+        .dec{
+            font-size: inherit;
+            height: 40px;
+            line-height: 40px;
+        }
+    </style>
+</head>
+<body>
+<div class="form">
+    <form action="addTalk" method="post" target="nm_iframe">
+        <div class="dec">输入:<input type="text" name="inputTalk"></input></div>
+        <div  class="dec">输出:<input type="text" name="outTalk"></input></div>
+        <div  class="dec">类型:<input type="text" name="wordType"></input></div>
+        <div  class="dec">关键字:<input type="text" name="keyWord"></input></div>
+        <input type="submit" id="add" value="添加"  onclick="return check(this.form)"></input>
+    </form>
+</div>
+<script type="text/javascript">
+    function check(from){
+        console.log(from)
+        if(from.inputTalk==''){
+            alert('输入不能为空');
+            return false;
+        }else if(from.outTalk==''){
+            alert('输出不能为空');
+            return false;
+        }
+        return false;
+    }
+</script>
+<iframe id="id_iframe" name="nm_iframe" style="display:none;"></iframe>
+</body>
+</html>
