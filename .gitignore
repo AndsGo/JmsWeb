@@ -1,3 +1,4 @@
 jms-ui/static/.gitkeep
 /jms/target/classes
 /jms/.idea/libraries
+.idea/
