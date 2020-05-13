@@ -13,6 +13,8 @@ Vue.use(ElementUI)
 //引入axios,绑定到axios原型链上
 import axios from 'axios'
 Vue.prototype.$axios = axios
+//设置统一请求地址
+axios.defaults.baseURL = 'http://127.0.0.1:8083/jms/'
 //引入echarts
 import echarts from 'echarts'
 Vue.prototype.$echarts = echarts
