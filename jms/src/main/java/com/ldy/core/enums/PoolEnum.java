@@ -1,6 +1,4 @@
-package com.ldy.enums;
-
-import com.ldy.common.util.JmxMetricsUtil;
+package com.ldy.core.enums;
 
 import java.util.Objects;
 

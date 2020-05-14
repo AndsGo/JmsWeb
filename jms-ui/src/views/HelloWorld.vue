@@ -17,7 +17,7 @@ export default {
     }
   },
   mounted () {
-  //  this.interval = setInterval(this.getConnection,1000);
+   this.interval = setInterval(this.getConnection,1000);
   },
   methods:{
     onClick : function(){
@@ -27,7 +27,7 @@ export default {
         if(this.flag){
           this.$router.push({ path: '/Todo' })
         }
-        // clearInterval(this.interval)
+        clearInterval(this.interval)
     },
     getConnection:function(){
       this.$axios.get('getConnection', {

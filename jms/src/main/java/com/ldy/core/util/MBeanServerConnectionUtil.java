@@ -24,7 +24,7 @@ public class MBeanServerConnectionUtil {
      * @param peer
      * @throws IOException
      */
-    private static synchronized void openMBeanServerConnection(Peer peer) throws IOException {
+    private static void openMBeanServerConnection(Peer peer) throws IOException {
         if (peer == null || StringUtils.isEmpty(peer.getHost())) {
             //抛出参数不合法异常
             throw new LdyRuntimeException(LdyErrorCode.ILLEGAL_ARGUMENTS);
@@ -74,7 +74,7 @@ public class MBeanServerConnectionUtil {
      *
      * @param timeInterval 过期时间
      */
-    public static synchronized void removeExpiredConnection(Long timeInterval) {
+    public static void removeExpiredConnection(Long timeInterval) {
         jmxServiceMap.entrySet().removeIf(peerJMXConnectorEntry -> {
             Date date = peerJMXConnectorEntry.getValue().getExecuteTime();
             if (date == null) {
@@ -96,4 +96,18 @@ public class MBeanServerConnectionUtil {
         });
     }
 
+    /**
+     * 移除过期的连接
+     *
+     * @param peer 需要移除的端点
+     */
+    public static  void removeConnection(Peer peer) {
+        ServiceDescriptor descriptor = jmxServiceMap.remove(peer);
+        if(descriptor!=null){
+            try {
+                descriptor.getJmxConnector().close();
+            } catch (IOException e) {
+            }
+        }
+    }
 }

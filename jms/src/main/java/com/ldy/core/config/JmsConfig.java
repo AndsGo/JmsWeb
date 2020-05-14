@@ -13,10 +13,10 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
+public class JmsConfig implements InitializingBean, DisposableBean {
 
-    private static XxlJobAdminConfig adminConfig = null;
-    public static XxlJobAdminConfig getAdminConfig() {
+    private static JmsConfig adminConfig = null;
+    public static JmsConfig getAdminConfig() {
         return adminConfig;
     }
 

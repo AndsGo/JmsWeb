@@ -1,7 +1,7 @@
 package com.ldy.core.util;
 
-import com.ldy.enums.CollectorEnum;
-import com.ldy.enums.PoolEnum;
+import com.ldy.core.enums.CollectorEnum;
+import com.ldy.core.enums.PoolEnum;
 
 import javax.management.MBeanServerConnection;
 import java.io.IOException;

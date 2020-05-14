@@ -2,6 +2,7 @@ package com.ldy.core.model;
 
 
 import com.ldy.core.util.JmxMetricsService;
+
 import javax.management.MBeanServerConnection;
 import javax.management.remote.JMXConnector;
 import java.io.IOException;
@@ -35,7 +36,7 @@ public class ServiceDescriptor {
         this.jmxConnector = jmxConnector;
         this.mBeanServerConnection = mBeanServerConnection;
         this.jmxMetricsService = jmxMetricsService;
-        this.executeTime =new Date();
+        this.executeTime = new Date();
     }
 
     public Peer getPeer() {
@@ -80,12 +81,14 @@ public class ServiceDescriptor {
 
     public void close() {
         try {
-            this.jmxConnector.close();
+            if (this.jmxConnector != null) {
+                this.jmxConnector.close();
+            }
         } catch (IOException e) {
         }
-        this.mBeanServerConnection=null;
-        this.jmxMetricsService=null;
+        this.mBeanServerConnection = null;
+        this.jmxMetricsService = null;
         this.executeTime = null;
-        this.peer=null;
+        this.peer = null;
     }
 }

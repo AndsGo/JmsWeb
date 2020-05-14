@@ -1,4 +1,4 @@
-package com.ldy.enums;
+package com.ldy.core.enums;
 
 import java.util.Objects;
 

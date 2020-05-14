@@ -1,5 +1,6 @@
 package com.ldy.core.thread;
 
+import com.ldy.core.util.MBeanServerConnectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,10 +33,10 @@ public class JmsConnectorLosedMonitorHelper {
 				while (!toStop) {
 					try {
 						// 任务结果丢失处理：调度记录停留在 "运行中" 状态超过10min，且对应执行器心跳注册失败不在线，则将本地调度主动标记失败；
-
+						MBeanServerConnectionUtil.removeExpiredConnection(3600000L);
 					} catch (Exception e) {
 						if (!toStop) {
-							logger.error(">>>>>>>>>>> xxl-job, job fail monitor thread error:{}", e);
+							logger.error(">>>>>>>>>>> jms, job fail monitor thread error:{}", e);
 						}
 					}
 
@@ -49,12 +50,12 @@ public class JmsConnectorLosedMonitorHelper {
 
                 }
 
-				logger.info(">>>>>>>>>>> xxl-job, JobLosedMonitorHelper stop");
+				logger.info(">>>>>>>>>>> jms, jmsLosedMonitorHelper stop");
 
 			}
 		});
 		monitorThread.setDaemon(true);
-		monitorThread.setName("xxl-job, admin JobLosedMonitorHelper");
+		monitorThread.setName("jms, admin jmsLosedMonitorHelper");
 		monitorThread.start();
 	}
 
