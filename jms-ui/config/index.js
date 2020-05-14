@@ -10,7 +10,16 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+      '/apis': {
+        // 测试环境
+        target: 'http://localhost:8083/jms/',  // 接口域名
+        changeOrigin: true,  //是否跨域
+        pathRewrite: {
+            '^/apis': '/'   //需要rewrite重写的,
+        }
+      } 
+    },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST

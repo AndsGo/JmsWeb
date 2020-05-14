@@ -1,8 +1,9 @@
-package com.ldy.util;
+package com.ldy.core.util;
 
 import com.ldy.common.exception.LdyErrorCode;
 import com.ldy.common.exception.LdyRuntimeException;
-import com.ldy.entity.Peer;
+import com.ldy.core.model.Peer;
+import com.ldy.core.model.ServiceDescriptor;
 import org.springframework.util.StringUtils;
 
 import javax.management.MBeanServerConnection;
@@ -16,10 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class MBeanServerConnectionUtil {
 
-    private static Map<Peer, JMXConnector> jmxConnectorMap = new ConcurrentHashMap<>(16);
-    private static Map<Peer, Date> jmxConnectionTimeMap = new ConcurrentHashMap<>(16);
-    private static Map<Peer, MBeanServerConnection> mBeanServerConnectionMap = new ConcurrentHashMap<>(16);
-
+    private static volatile Map<Peer, ServiceDescriptor> jmxServiceMap = new ConcurrentHashMap<>(16);
     /**
      * 获取jmx连接
      *
@@ -27,7 +25,7 @@ public class MBeanServerConnectionUtil {
      * @throws IOException
      */
     private static synchronized void openMBeanServerConnection(Peer peer) throws IOException {
-        if (peer != null && !StringUtils.isEmpty(peer.getHost())) {
+        if (peer == null || StringUtils.isEmpty(peer.getHost())) {
             //抛出参数不合法异常
             throw new LdyRuntimeException(LdyErrorCode.ILLEGAL_ARGUMENTS);
         } else {
@@ -40,31 +38,32 @@ public class MBeanServerConnectionUtil {
             JMXConnector jmxConnector = JMXConnectorFactory.connect(jmxServiceURL, null);
 
             MBeanServerConnection mBeanServerConnection = jmxConnector.getMBeanServerConnection();
-            jmxConnectorMap.put(peer, jmxConnector);
-            jmxConnectionTimeMap.put(peer, new Date());
-            mBeanServerConnectionMap.put(peer, mBeanServerConnection);
+            JmxMetricsService jmxMetricsService = new JmxMetricsService(mBeanServerConnection);
+            jmxServiceMap.put(peer, new ServiceDescriptor(peer,jmxConnector,mBeanServerConnection,jmxMetricsService));
         }
     }
 
     /**
-     * 根据一个端点获取 MBeanServerConnection
+     * 根据一个端点获取 ServiceDescriptor
      *
      * @param peer
      * @return
      * @throws IOException
      */
-    public static MBeanServerConnection getMBeanServerConnection(Peer peer) throws IOException {
+    public static ServiceDescriptor getMBeanServerConnection(Peer peer) throws IOException {
         //从缓存中获取
-        MBeanServerConnection mBeanServerConnection = mBeanServerConnectionMap.get(peer);
-        if (mBeanServerConnection != null) {
-            return mBeanServerConnection;
+        ServiceDescriptor serviceDescriptor = jmxServiceMap.get(peer);
+        if (serviceDescriptor != null) {
+            serviceDescriptor.setExecuteTime(new Date());
+            return serviceDescriptor;
         } else {
             //重新连接
             openMBeanServerConnection(peer);
         }
-        mBeanServerConnection = mBeanServerConnectionMap.get(peer);
-        if (mBeanServerConnection != null) {
-            return mBeanServerConnection;
+        serviceDescriptor = jmxServiceMap.get(peer);
+        if (serviceDescriptor != null) {
+            serviceDescriptor.setExecuteTime(new Date());
+            return serviceDescriptor;
         } else {
             throw new LdyRuntimeException(LdyErrorCode.ILLEGAL_ARGUMENTS);
         }
@@ -76,22 +75,25 @@ public class MBeanServerConnectionUtil {
      * @param timeInterval 过期时间
      */
     public static synchronized void removeExpiredConnection(Long timeInterval) {
-        jmxConnectorMap.entrySet().removeIf(peerJMXConnectorEntry -> {
-            Date date = jmxConnectionTimeMap.get(peerJMXConnectorEntry.getKey());
+        jmxServiceMap.entrySet().removeIf(peerJMXConnectorEntry -> {
+            Date date = peerJMXConnectorEntry.getValue().getExecuteTime();
             if (date == null) {
                 return true;
             }
-            //大于半小时,认为连接断开,清除连接
+            //大于半小时,任务连接断开,清除连接
             if ((System.currentTimeMillis() - date.getTime()) > timeInterval) {
-                try {
-                    jmxConnectionTimeMap.remove(peerJMXConnectorEntry.getKey());
-                    mBeanServerConnectionMap.remove(peerJMXConnectorEntry.getKey());
-                    peerJMXConnectorEntry.getValue().close();
-                } catch (IOException e) {
-                }
+                peerJMXConnectorEntry.getValue().close();
+                return true;
+            }
+            //获取连接异常，表示超时
+            try {
+                peerJMXConnectorEntry.getValue().getJmxConnector().getConnectionId();
+            }catch (Exception e){
+                peerJMXConnectorEntry.getValue().close();
                 return true;
             }
             return false;
         });
     }
+
 }

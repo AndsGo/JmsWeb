@@ -1,4 +1,4 @@
-package com.ldy.entity;
+package com.ldy.core.model;
 
 import java.util.Objects;
 

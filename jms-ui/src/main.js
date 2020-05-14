@@ -12,9 +12,28 @@ import 'element-ui/lib/theme-chalk/index.css'
 Vue.use(ElementUI)
 //引入axios,绑定到axios原型链上
 import axios from 'axios'
-Vue.prototype.$axios = axios
+axios.defaults.withCredentials = true // 若跨域请求需要带 cookie 身份识别
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 //设置统一请求地址
-axios.defaults.baseURL = 'http://127.0.0.1:8083/jms/'
+console.log(process.env.API_HOST)
+axios.defaults.baseURL = process.env.API_HOST;
+Vue.prototype.$axios = axios
+
+//POST传参序列化(添加请求拦截器)
+axios.interceptors.request.use((config) => {
+  //在发送请求之前如果为post序列化请求参数
+  if (config.method === 'post') {
+      config.data = qs.stringify(config.data);
+  }
+  return config;
+}, (error) => {
+  Toast({
+      message: '传参错误，请检查！',
+      duration: 1000
+  });
+  return Promise.reject(error);
+});
+
 //引入echarts
 import echarts from 'echarts'
 Vue.prototype.$echarts = echarts
