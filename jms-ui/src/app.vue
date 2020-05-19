@@ -22,12 +22,26 @@ export default {
     };
   },
   mounted() {
-    debugger
-    this.routes = this.$router.options.routes;
+    this.getConnection();
+      this.routes = this.$router.options.routes;
   },
   methods: {
     go(param){
       this.$router.push({ path: param })
+    },
+    getConnection:function(){
+      this.$axios.get('getPeerList', {
+          params: {
+            host: "172.36.0.231",
+            port:60001
+          }
+        })
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
     }
   }
 };

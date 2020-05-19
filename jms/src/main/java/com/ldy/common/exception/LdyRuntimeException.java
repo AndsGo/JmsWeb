@@ -1,5 +1,6 @@
 package com.ldy.common.exception;
 
+import com.ldy.common.enums.LdyErrorCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

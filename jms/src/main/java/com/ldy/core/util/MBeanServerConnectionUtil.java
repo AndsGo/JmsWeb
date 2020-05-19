@@ -1,6 +1,6 @@
 package com.ldy.core.util;
 
-import com.ldy.common.exception.LdyErrorCode;
+import com.ldy.common.enums.LdyErrorCode;
 import com.ldy.common.exception.LdyRuntimeException;
 import com.ldy.core.model.Peer;
 import com.ldy.core.model.ServiceDescriptor;
@@ -13,6 +13,7 @@ import javax.management.remote.JMXServiceURL;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MBeanServerConnectionUtil {
@@ -72,7 +73,7 @@ public class MBeanServerConnectionUtil {
     /**
      * 移除过期的连接
      *
-     * @param timeInterval 过期时间
+     * @param timeInterval 过期时间 ms
      */
     public static void removeExpiredConnection(Long timeInterval) {
         jmxServiceMap.entrySet().removeIf(peerJMXConnectorEntry -> {
@@ -109,5 +110,9 @@ public class MBeanServerConnectionUtil {
             } catch (IOException e) {
             }
         }
+    }
+
+    public static Set<Peer> getPeerSet(){
+        return jmxServiceMap.keySet();
     }
 }

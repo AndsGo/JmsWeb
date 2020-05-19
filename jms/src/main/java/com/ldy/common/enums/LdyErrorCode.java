@@ -1,4 +1,4 @@
-package com.ldy.common.exception;
+package com.ldy.common.enums;
 
 import java.io.Serializable;
 
