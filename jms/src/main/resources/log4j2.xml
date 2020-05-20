@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="error">
+    <properties>
+        <Property name="log_path">/applogs/ldy</Property>
+        <Property name="serviceIp">${sys:serviceIp}</Property>
+    </properties>
+    
+    <appenders>
+    
+        <console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="[%d][%t][%p][%l] %m%n" />
+        </console>
+
+        <RollingFile name="RollingFileInfo" fileName="${log_path}/info.log" filePattern="${log_path}/info-%d{yyyy-MM-dd-HH}-%i.log">
+            <Filters>
+                <ThresholdFilter level="INFO" />
+                <ThresholdFilter level="WARN" onMatch="DENY" onMismatch="NEUTRAL" />
+            </Filters>
+            
+            <PatternLayout pattern="[%d][%t][%p][%c:%L] %m%n" />
+            <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+        </RollingFile>
+
+        <RollingFile name="RollingFileWarn" fileName="${log_path}/warn.log" filePattern="${log_path}/warn-%d{yyyy-MM-dd-HH}-%i.log">
+            <Filters>
+                <ThresholdFilter level="WARN" />
+                <ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL" />
+            </Filters>
+            <PatternLayout pattern="[%d][%t][%p][%c:%L] %m%n" />
+            <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+        </RollingFile>
+
+        <RollingFile name="RollingFileError" fileName="${log_path}/error.log" filePattern="${log_path}/error-%d{yyyy-MM-dd-HH}-%i.log">
+            <ThresholdFilter level="ERROR" />
+            <PatternLayout pattern="[%d][%t][%p][%c:%L] %m%n" />
+            <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+        </RollingFile>
+
+    </appenders>
+
+    <loggers>
+
+	    <logger name="druid.sql.Statement" level="INFO" additivity="false">
+            <appender-ref ref="RollingFileInfo"/>
+        </logger>
+        <logger name="druid.sql.ResultSet" level="INFO" additivity="false">
+            <appender-ref ref="RollingFileInfo"/>
+        </logger>
+	    
+        <root level="error">
+            <appender-ref ref="Console" />
+            <appender-ref ref="RollingFileInfo" />
+            <appender-ref ref="RollingFileWarn" />
+            <appender-ref ref="RollingFileError" />
+        </root>
+
+    </loggers>
+
+</configuration>
