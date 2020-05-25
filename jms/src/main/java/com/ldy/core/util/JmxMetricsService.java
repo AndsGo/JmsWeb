@@ -342,6 +342,15 @@ public class JmxMetricsService {
     public String getName() {
         return runtimeMXBean.getName();
     }
+    /**
+     * 运行时信息
+     */
+    /**
+     * pid@主机名 = vmId
+     */
+    public String getHost() {
+        return runtimeMXBean.getName().split("@")[1];
+    }
 
     /**
      * 进程ID

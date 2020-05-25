@@ -3,13 +3,31 @@
     <el-container style="border: 1px solid #eee">
       <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
         <el-menu>
-          <el-menu-item v-for="item in routes" :key="item.path" @click="go(item.path)">{{item.name}}</el-menu-item>
+          <el-row>
+          <el-tag>添加节点：</el-tag>
+            <el-button type="primary" icon="el-icon-plus" size="small" @click="dialogVisible = true"></el-button>
+          </el-row>
+          <el-menu-item v-for="item in routes" :key="item.host" @click="go(item)">{{item.host}}:{{item.port}}</el-menu-item>
         </el-menu>
       </el-aside>
       <el-main>
         <router-view />
       </el-main>
     </el-container>
+    <el-dialog title="添加jmx节点" :visible.sync="dialogVisible" width="30%">
+      <el-row :gutter="5">
+        <el-col :span="18">
+          <el-input placeholder="ip" v-model="host" clearable></el-input>
+        </el-col>
+        <el-col :span="6">
+          <el-input placeholder="端口" v-model="port" clearable></el-input>
+        </el-col>
+      </el-row>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addPeer">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -18,30 +36,48 @@ export default {
   name: "App",
   data() {
     return {
-      routes: []
+      dialogVisible: false,
+      routes: [],
+      host: "",
+      port: ""
     };
   },
   mounted() {
     this.getConnection();
-      this.routes = this.$router.options.routes;
+    // this.$router.push({ path: param });
   },
   methods: {
-    go(param){
-      this.$router.push({ path: param })
+    go(param) {
+      this.$story.peerSet=param
     },
-    getConnection:function(){
-      this.$axios.get('getPeerList', {
+    getConnection: function() {
+      this.$axios
+        .get("getPeerList")
+        .then((response) =>{
+          this.routes = response.data.result
+          // this.routes = this.$store.peerSet
+        })
+        .catch((error)=> {
+          console.log(error)
+        });
+    },
+    addPeer() {
+       this.$axios
+        .get("getConnection", {
           params: {
-            host: "172.36.0.231",
-            port:60001
+            host: this.host,
+            port: this.port
           }
         })
-        .then(function (response) {
-          console.log(response);
+        .then((response) => {
+          this.routes.push({
+            host: this.host,
+            port: this.port
+          })
         })
-        .catch(function (error) {
-          console.log(error);
-        })
+        .catch((error) => {
+         this.$message.error('出错了');
+        });
     }
   }
 };

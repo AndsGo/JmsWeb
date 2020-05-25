@@ -32,7 +32,7 @@ export default {
     };
   },
   mounted() {
-    this.interval = setInterval(this.getConnection,1000);
+    // this.interval = setInterval(this.getConnection,1000);
   },
   methods: {
     getConnection:function(){

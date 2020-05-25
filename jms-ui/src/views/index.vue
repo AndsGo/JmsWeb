@@ -1,12 +1,12 @@
 <template>
   <div class="hello">
     <el-tabs type="border-card">
-      <el-tab-pane label="用户管理">
+      <el-tab-pane label="概述">
         <overview/>
       </el-tab-pane>
-      <el-tab-pane label="配置管理">配置管理</el-tab-pane>
-      <el-tab-pane label="角色管理">角色管理</el-tab-pane>
-      <el-tab-pane label="定时任务补偿">定时任务补偿</el-tab-pane>
+      <el-tab-pane label="监视">监视</el-tab-pane>
+      <el-tab-pane label="线程">线程</el-tab-pane>
+      <el-tab-pane label="抽样器">抽样器</el-tab-pane>
     </el-tabs>
   </div>
 </template>

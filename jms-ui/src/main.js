@@ -8,7 +8,6 @@ Vue.config.productionTip = false
 //引入ui
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-
 Vue.use(ElementUI)
 //引入axios,绑定到axios原型链上
 import axios from 'axios'
@@ -33,14 +32,32 @@ axios.interceptors.request.use((config) => {
   });
   return Promise.reject(error);
 });
+//相应拦截器
+axios.interceptors.response.use( (response) => {
+  // 对响应数据做点什么
+  // response 是请求回来的数据
+  if(response.data.succ=='fail'){
+    this.$message.error(response.data.msg);
+  }else{
+    return response;
+  }
+}, function (error) {
+  // 对响应错误做点什么
+  return Promise.reject(error)
+}
+)
 
 //引入echarts
 import echarts from 'echarts'
 Vue.prototype.$echarts = echarts
 
+//引入vuex  store
+import store from './store'
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  store,
   router,
   components: { App },
   template: '<App/>'
