@@ -1,7 +1,8 @@
 package com.ldy.service;
 
 import com.ldy.core.model.ServiceDescriptor;
-import com.ldy.vo.reponse.Response4OverviewVO;
+import com.ldy.vo.reponse.Response4monitorVO;
+import com.ldy.vo.reponse.Response4overviewVO;
 
 /**
  * @Description:  JmsService
@@ -11,5 +12,17 @@ import com.ldy.vo.reponse.Response4OverviewVO;
  * @version V1.0
  */
 public interface IJmsService {
-    Response4OverviewVO getOverview(ServiceDescriptor descriptor);
+    /**
+     * 获取jmx概述信息
+     * @param descriptor
+     * @return Response4overviewVO
+     */
+    Response4overviewVO getOverview(ServiceDescriptor descriptor);
+
+    /**
+     * 获取jmx监控信息
+     * @param descriptor
+     * @return Response4monitorVO
+     */
+    Response4monitorVO getMonitor(ServiceDescriptor descriptor);
 }

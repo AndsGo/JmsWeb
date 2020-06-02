@@ -108,7 +108,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.1.39</version>
+            <version>1.2.70</version>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
@@ -141,6 +141,11 @@
             <groupId>com.baidu.disconf</groupId>
             <artifactId>disconf-client</artifactId>
             <version>2.6.36</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.10</version>
         </dependency>
     </dependencies>
 
