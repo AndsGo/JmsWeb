@@ -47,7 +47,7 @@ export default {
       dialogVisible: false,
       routes: [],
       host: "",
-      port: ""
+      port: "60001"
     };
   },
   mounted() {
@@ -89,10 +89,8 @@ export default {
           }
         })
         .then(response => {
-          this.routes.push({
-            host: this.host,
-            port: this.port
-          });
+          this.getPeerList()
+          this.dialogVisible = false
         })
         .catch(error => {
           this.$message.error(
