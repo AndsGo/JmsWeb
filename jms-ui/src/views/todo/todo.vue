@@ -24,34 +24,53 @@ export default {
       seen: true,
       parentMessage: "1",
       items: [{ message: "Foo" }, { message: "Bar" }],
-      option: {
+       option :{
         title: {
-          text: "echarts"
+            text: '折线图堆叠'
         },
-        toolbox: {
-          show: true,
-          feature: {
-            saveAsImage: {
-              show: true
-            }
-          }
+        tooltip: {
+            trigger: 'axis'
         },
         legend: {
-          data: ["销量"]
+            data: ['邮件营销', '联盟广告']
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
         },
         xAxis: {
-          data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
+            type: 'category',
+            boundaryGap: false,
+            data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
         },
-        yAxis: {},
+        yAxis: {
+            type: 'value'
+        },
         series: [
-          {
-            name: "销量",
-            type: "bar",
-            data: [5, 20, 36, 10, 10, 20]
-          }
+            {
+                name: '邮件营销',
+                type: 'line',
+                smooth: true,
+                stack: '总量',
+                data: [120, 132, 101, 134, 90, 230, 210,12]
+            },
+            {
+                name: '联盟广告',
+                type: 'line',
+                            smooth: true,
+                stack: '总量',
+                data: [220, 182, 191, 234, 290, 330, 310]
+            }
         ]
-      }
-    };
+    }
+    }
   },
   mounted() {
     this.set();

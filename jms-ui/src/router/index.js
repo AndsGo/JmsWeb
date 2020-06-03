@@ -10,6 +10,11 @@ export default new Router({
       path: '/',
       name: 'index',
       component: index
+    },
+    {
+      path: '/todo',
+      name: 'Todo',
+      component: Todo
     }
   ]
 })
