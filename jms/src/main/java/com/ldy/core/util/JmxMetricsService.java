@@ -13,7 +13,6 @@ import java.lang.management.MemoryMXBean;
 import java.lang.management.MemoryPoolMXBean;
 import java.lang.management.MemoryType;
 import java.lang.management.MemoryUsage;
-import java.lang.management.OperatingSystemMXBean;
 import java.lang.management.RuntimeMXBean;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
@@ -33,7 +32,7 @@ public class JmxMetricsService {
 
     /***以下为具体的MXBean实例***/
     private ClassLoadingMXBean classLoading;
-    private OperatingSystemMXBean systemMXBean;
+    private com.sun.management.OperatingSystemMXBean systemMXBean;
     private RuntimeMXBean runtimeMXBean;
     private ThreadMXBean threadMXBean;
     private CompilationMXBean compilation;
@@ -63,9 +62,8 @@ public class JmxMetricsService {
         systemMXBean = ManagementFactory.newPlatformMXBeanProxy(
                 mBeanServerConnection,
                 ManagementFactory.OPERATING_SYSTEM_MXBEAN_NAME,
-                OperatingSystemMXBean.class
+                com.sun.management.OperatingSystemMXBean.class
         );
-        isOperatingSystemImpl = "sun.management.OperatingSystemImpl".equals(systemMXBean.getClass().getName());
         //获取运行时信息
         runtimeMXBean = ManagementFactory.newPlatformMXBeanProxy(
                 mBeanServerConnection,
@@ -84,10 +82,12 @@ public class JmxMetricsService {
                 ManagementFactory.CLASS_LOADING_MXBEAN_NAME,
                 ClassLoadingMXBean.class
         );
+        //获取内存信息
         List<MemoryPoolMXBean> memoryPool = ManagementFactory.getPlatformMXBeans(mBeanServerConnection, MemoryPoolMXBean.class);
         for (MemoryPoolMXBean pool : memoryPool) {
             pools.put(pool.getName(), pool);
         }
+        //获取gc信息
         List<GarbageCollectorMXBean> garbageCollectors = ManagementFactory.getPlatformMXBeans(mBeanServerConnection, GarbageCollectorMXBean.class);
         for (GarbageCollectorMXBean garbageCollector : garbageCollectors) {
             collectors.put(garbageCollector.getName(), garbageCollector);
@@ -237,100 +237,44 @@ public class JmxMetricsService {
      * public native long getTotalSwapSpaceSize();
      */
 
-    public boolean isOperatingSystemImpl() {
-        return isOperatingSystemImpl;
-    }
-
-    private long getLong(String methodName) {
-        try {
-            final Method method = systemMXBean.getClass().getMethod(methodName, (Class<?>[]) null);
-            method.setAccessible(true);
-            return (long) method.invoke(systemMXBean, (Object[]) null);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            // Do Noting
-        }
-        return -1L;
-    }
-
-    private double getDouble(String methodName) {
-        try {
-            final Method method = systemMXBean.getClass().getMethod(methodName, (Class<?>[]) null);
-            method.setAccessible(true);
-            return (double) method.invoke(systemMXBean, (Object[]) null);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            // Do Noting
-        }
-        return -1D;
-    }
-
     public long getCommittedVirtualMemorySize() {
-        if (!isOperatingSystemImpl()) {
-            return -1L;
-        }
-        return getLong("getCommittedVirtualMemorySize");
+        return systemMXBean.getCommittedVirtualMemorySize();
     }
 
     public long getTotalSwapSpaceSize() {
-        if (!isOperatingSystemImpl()) {
-            return -1L;
-        }
-        return getLong("getTotalSwapSpaceSize");
+        return systemMXBean.getTotalSwapSpaceSize();
     }
 
     public long getFreeSwapSpaceSize() {
-        if (!isOperatingSystemImpl()) {
-            return -1L;
-        }
-        return getLong("getFreeSwapSpaceSize");
+        return systemMXBean.getFreeSwapSpaceSize();
     }
 
     public long getProcessCpuTime() {
-        if (!isOperatingSystemImpl()) {
-            return -1L;
-        }
-        return getLong("getProcessCpuTime");
+        return systemMXBean.getProcessCpuTime();
     }
 
     public long getFreePhysicalMemorySize() {
-        if (!isOperatingSystemImpl()) {
-            return -1L;
-        }
-        return getLong("getFreePhysicalMemorySize");
+        return systemMXBean.getFreePhysicalMemorySize();
     }
 
     public long getTotalPhysicalMemorySize() {
-        if (!isOperatingSystemImpl()) {
-            return -1L;
-        }
-        return getLong("getTotalPhysicalMemorySize");
+        return systemMXBean.getTotalPhysicalMemorySize();
     }
 
-    public long getOpenFileDescriptorCount() {
-        if (!isOperatingSystemImpl()) {
-            return -1L;
-        }
-        return getLong("getOpenFileDescriptorCount");
-    }
+//    public long getOpenFileDescriptorCount() {
+//        return systemMXBean.getOpenFileDescriptorCount();
+//    }
 
-    public long getMaxFileDescriptorCount() {
-        if (!isOperatingSystemImpl()) {
-            return -1L;
-        }
-        return getLong("getMaxFileDescriptorCount");
-    }
+//    public long getMaxFileDescriptorCount() {
+//        return systemMXBean.getMaxFileDescriptorCount();
+//    }
 
     public double getSystemCpuLoad() {
-        if (!isOperatingSystemImpl()) {
-            return -1D;
-        }
-        return getDouble("getSystemCpuLoad");
+        return systemMXBean.getSystemCpuLoad();
     }
 
     public double getProcessCpuLoad() {
-        if (!isOperatingSystemImpl()) {
-            return -1D;
-        }
-        return getDouble("getProcessCpuLoad");
+        return systemMXBean.getProcessCpuLoad();
     }
 
     /**
@@ -689,7 +633,16 @@ public class JmxMetricsService {
         }
         return collectors.get(collector.getCollectorName()).getCollectionTime();
     }
-
+    /**
+     * 垃圾回收期总耗时
+     */
+    public long getTotalGarbageCollectionTime() {
+        long total = -1L;
+        for (GarbageCollectorMXBean collectorMXBean : collectors.values()) {
+            total+=collectorMXBean.getCollectionTime();
+        }
+        return total;
+    }
     /**
      * 垃圾回收器 可回收的区域名称
      */
@@ -700,6 +653,8 @@ public class JmxMetricsService {
         String[] memoryPoolNames = collectors.get(collector.getCollectorName()).getMemoryPoolNames();
         return new ArrayList<>(Arrays.asList(memoryPoolNames));
     }
+
+
 
 
 }

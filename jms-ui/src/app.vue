@@ -18,7 +18,7 @@
           </el-menu-item>
         </el-menu>
       </el-aside>
-      <el-main height="200px" style="overflow: auto">
+      <el-main>
         <router-view />
       </el-main>
     </el-container>
@@ -51,7 +51,7 @@ export default {
     };
   },
   mounted() {
-    this.getPeerList();
+    setInterval(this.getPeerList(),1000);
     // this.$router.push({ path: param });
   },
   methods: {
@@ -81,6 +81,12 @@ export default {
         });
     },
     addPeer() {
+      let loading = this.$loading({
+          lock: true,
+          text: 'Loading',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
       this.$axios
         .get("getConnection", {
           params: {
@@ -91,10 +97,13 @@ export default {
         .then(response => {
           this.getPeerList()
           this.dialogVisible = false
+          loading.close();
         })
         .catch(error => {
+          loading.close()
           this.$message.error(
             error.response ? error.response.data : error.message
+             
           );
         });
     }
@@ -109,6 +118,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  /* margin-top: 60px; */
 }
 </style>

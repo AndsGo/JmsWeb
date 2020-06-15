@@ -8,6 +8,7 @@ import com.ldy.core.util.MBeanServerConnectionUtil;
 import com.ldy.service.IJmsService;
 import com.ldy.vo.reponse.Response4monitorVO;
 import com.ldy.vo.reponse.Response4overviewVO;
+import com.ldy.vo.reponse.Response4threadVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,7 @@ public class JmsController {
      */
     @GetMapping("/jms/getConnection")
     public Response getConnection(Peer peer) {
+        logger.info("getConnection{}:{}",peer.getHost(),peer.getPort());
         try {
             ServiceDescriptor descriptor = MBeanServerConnectionUtil.getMBeanServerConnection(peer);
             String connectionId = descriptor.getJmxConnector().getConnectionId();
@@ -60,6 +62,7 @@ public class JmsController {
      */
     @GetMapping("/jms/getOverview")
     public Response getOverview(Peer peer) {
+        logger.info("getOverview{}:{}",peer.getHost(),peer.getPort());
         try {
             ServiceDescriptor descriptor = MBeanServerConnectionUtil.getMBeanServerConnection(peer);
             Response4overviewVO response4OverviewVO= jmsService.getOverview(descriptor);
@@ -76,10 +79,29 @@ public class JmsController {
      */
     @GetMapping("/jms/getMonitor")
     public Response getMonitor(Peer peer) {
+        logger.info("getMonitor{}:{}",peer.getHost(),peer.getPort());
         try {
             ServiceDescriptor descriptor = MBeanServerConnectionUtil.getMBeanServerConnection(peer);
             Response4monitorVO monitor = jmsService.getMonitor(descriptor);
             return ResponseHelper.buildOk(monitor);
+        } catch (Exception e) {
+            logger.error("获取连接失败",e);
+            return ResponseHelper.buildFail(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取线程数据
+     * @author: songxulin
+     * @date :  2020-05-28 16:05
+     */
+    @GetMapping("/jms/getThreadAll")
+    public Response getThreadAll(Peer peer) {
+        logger.info("getThreadAll{}:{}",peer.getHost(),peer.getPort());
+        try {
+            ServiceDescriptor descriptor = MBeanServerConnectionUtil.getMBeanServerConnection(peer);
+            Response4threadVO response = jmsService.getThreadAll(descriptor);
+            return ResponseHelper.buildOk(response);
         } catch (Exception e) {
             logger.error("获取连接失败",e);
             return ResponseHelper.buildFail(e.getMessage());

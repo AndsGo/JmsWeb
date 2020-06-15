@@ -15,7 +15,14 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-
+/**
+ * MBeanServerConnection连接工具类
+ * 管理当前所连接的jmx连接
+ * @ClassName: com.ldy.core.util.MBeanServerConnectionUtil.java
+ * @author: songxulin
+ * @date :  2020-06-04 19:46
+ * @version V1.0
+ */
 public class MBeanServerConnectionUtil {
 
     private static volatile Map<Peer, ServiceDescriptor> jmxServiceMap = new ConcurrentHashMap<>(16);

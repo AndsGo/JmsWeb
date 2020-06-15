@@ -30,6 +30,7 @@ public class ServiceDescriptor {
     private Date executeTime;
 
     private JmxMetricsService jmxMetricsService;
+    private JmsServicePrevModel jmsServiceModel;
 
     public ServiceDescriptor(Peer peer, JMXConnector jmxConnector, MBeanServerConnection mBeanServerConnection, JmxMetricsService jmxMetricsService) {
         this.peer = peer;
@@ -37,6 +38,7 @@ public class ServiceDescriptor {
         this.mBeanServerConnection = mBeanServerConnection;
         this.jmxMetricsService = jmxMetricsService;
         this.executeTime = new Date();
+        this.jmsServiceModel = new JmsServicePrevModel();
     }
 
     public Peer getPeer() {
@@ -77,6 +79,14 @@ public class ServiceDescriptor {
 
     public void setExecuteTime(Date executeTime) {
         this.executeTime = executeTime;
+    }
+
+    public JmsServicePrevModel getJmsServiceModel() {
+        return jmsServiceModel;
+    }
+
+    public void setJmsServiceModel(JmsServicePrevModel jmsServiceModel) {
+        this.jmsServiceModel = jmsServiceModel;
     }
 
     public void close() {

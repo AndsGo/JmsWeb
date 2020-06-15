@@ -4,8 +4,12 @@
       <el-tab-pane label="概述">
         <overview/>
       </el-tab-pane>
-      <el-tab-pane label="监视">监视</el-tab-pane>
-      <el-tab-pane label="线程">线程</el-tab-pane>
+      <el-tab-pane label="监视">
+        <monitor/>
+      </el-tab-pane>
+      <el-tab-pane label="线程">
+        <thread/>
+      </el-tab-pane>
       <el-tab-pane label="抽样器">抽样器</el-tab-pane>
     </el-tabs>
   </div>
@@ -13,9 +17,13 @@
 
 <script>
 import overview from "@/components/overview/index";
+import monitor from "@/components/monitor/index";
+import thread from "@/components/thread/index";
 export default {
   components: {
-    overview
+    overview,
+    monitor,
+    thread
   },
   name: "HelloWorld",
   data() {

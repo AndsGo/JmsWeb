@@ -32,12 +32,12 @@
       <el-main style="text-align: left; font-size: 12px ;" >
         <el-tabs type="card">
           <el-tab-pane label="jvm参数" name="first">
-            <div >
+            <div style="overflow:scroll;height:150px">
               <p v-for="item in overview.inputArguments" :key="item+'j'">{{item}}</p>
             </div>
           </el-tab-pane>
           <el-tab-pane label="系统参数" name="second">
-            <div >
+            <div style="overflow:scroll;height:150px">
               <p v-for="(v,k) in overview.systemProperties" :key="k+'s'">
                 <span style="color: #BF7158;font-weight:bold">{{k}}</span>
                 = {{v}}

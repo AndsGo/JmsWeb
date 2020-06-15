@@ -3,6 +3,7 @@ package com.ldy.service;
 import com.ldy.core.model.ServiceDescriptor;
 import com.ldy.vo.reponse.Response4monitorVO;
 import com.ldy.vo.reponse.Response4overviewVO;
+import com.ldy.vo.reponse.Response4threadVO;
 
 /**
  * @Description:  JmsService
@@ -25,4 +26,11 @@ public interface IJmsService {
      * @return Response4monitorVO
      */
     Response4monitorVO getMonitor(ServiceDescriptor descriptor);
+
+    /**
+     * 获取线程数据
+     * @param descriptor
+     * @return Response4threadVO
+     */
+    Response4threadVO getThreadAll(ServiceDescriptor descriptor);
 }
