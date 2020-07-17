@@ -119,6 +119,10 @@ public class MBeanServerConnectionUtil {
         }
     }
 
+    /**
+     * 获取当前连接的节点
+     * @return
+     */
     public static Set<Peer> getPeerSet(){
         return jmxServiceMap.keySet();
     }

@@ -16,8 +16,6 @@ import java.lang.management.MemoryUsage;
 import java.lang.management.RuntimeMXBean;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -71,7 +69,7 @@ public class JmxMetricsService {
                 RuntimeMXBean.class
         );
         //获取线程信息
-        threadMXBean = ManagementFactory.newPlatformMXBeanProxy(
+        this.threadMXBean = ManagementFactory.newPlatformMXBeanProxy(
                 mBeanServerConnection,
                 ManagementFactory.THREAD_MXBEAN_NAME,
                 ThreadMXBean.class

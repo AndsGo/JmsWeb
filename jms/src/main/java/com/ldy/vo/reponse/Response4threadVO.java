@@ -1,6 +1,8 @@
 package com.ldy.vo.reponse;
 
 
+import java.util.Map;
+
 /**
  * threadVO
  * @ClassName: com.ldy.vo.reponse.Response4threadVO.java
@@ -18,14 +20,48 @@ public class Response4threadVO {
      */
     private String timeEnd;
 
-    private ThreadCount threadCount;
+    private ThreadCountVO threadCountVO;
 
-    public static class ThreadCount {
-        public ThreadCount() {
+    Map<Long, ThreadInfoVO> threadInfoVOMap;
+
+    public String getTimeStart() {
+        return timeStart;
+    }
+
+    public void setTimeStart(String timeStart) {
+        this.timeStart = timeStart;
+    }
+
+    public String getTimeEnd() {
+        return timeEnd;
+    }
+
+    public void setTimeEnd(String timeEnd) {
+        this.timeEnd = timeEnd;
+    }
+
+    public ThreadCountVO getThreadCountVO() {
+        return threadCountVO;
+    }
+
+    public void setThreadCountVO(ThreadCountVO threadCountVO) {
+        this.threadCountVO = threadCountVO;
+    }
+
+    public Map<Long, ThreadInfoVO> getThreadInfoVOMap() {
+        return threadInfoVOMap;
+    }
+
+    public void setThreadInfoVOMap(Map<Long, ThreadInfoVO> threadInfoVOMap) {
+        this.threadInfoVOMap = threadInfoVOMap;
+    }
+
+    public static class ThreadCountVO {
+        public ThreadCountVO() {
             super();
         }
 
-        public ThreadCount(int threadCount, long totalStartedThreadCount, long daemonThreadCount, int peakThreadCount) {
+        public ThreadCountVO(int threadCount, long totalStartedThreadCount, long daemonThreadCount, int peakThreadCount) {
             this.threadCount = threadCount;
             this.totalStartedThreadCount = totalStartedThreadCount;
             this.daemonThreadCount = daemonThreadCount;

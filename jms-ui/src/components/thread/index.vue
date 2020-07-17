@@ -12,7 +12,7 @@ export default {
   data() {
     return {
       title: "线程",
-      categories: ['',''],
+      categories: ['aa','bb'],
       data: [],
       dataCount:10,
       startTime:+new Date(),
@@ -67,7 +67,7 @@ export default {
           scale: true,
           axisLabel: {
             formatter: function(val) {
-              return Math.max(0, val - new Date().getTime()) + " ms";
+              return new Date(val).Format("hh:mm:ss");
             }
           }
         },
@@ -95,11 +95,35 @@ export default {
     if (!this.$store.monitor) {
       this.$store.monitor = {};
     }
-    this.interval = setInterval(this.refresh, 5000);
+    this.init();
+    // this.interval = setInterval(this.refresh, 5000);
     
   },
   methods: {
-    refresh: function() {this.init();},
+    refresh: function() {
+        if(!document.getElementById("thread")){
+            debugger
+            return
+        }
+      this.$echarts.util.each(this.categories, (category, index) => {
+        var baseTime = new Date().getTime();
+        for (var i = 0; i < this.dataCount; i++) {
+          var typeItem = this.types[Math.round(Math.random() * (this.types.length - 1))];
+          var duration = 1000;
+          this.data.push({
+            name: typeItem.name,
+            value: [index, baseTime, (baseTime += duration), duration],
+            itemStyle: {
+              normal: {
+                color: typeItem.color
+              }
+            }
+          });
+        }
+      });
+      this.threadOption.series[0].data=this.data
+      this.threadChart.setOption(this.threadOption, true);
+    },
     init: function() {
         if(!document.getElementById("thread")){
             debugger
@@ -111,11 +135,11 @@ export default {
           var typeItem = this.types[Math.round(Math.random() * (this.types.length - 1))];
           var duration = 1000;
           this.data.push({
-            name: "",
+            name: typeItem.name,
             value: [index, baseTime, (baseTime += duration), duration],
             itemStyle: {
               normal: {
-                color: "#72b362"
+                color: typeItem.color
               }
             }
           });

@@ -134,5 +134,6 @@
     <orderEntry type="library" name="Maven: com.google.guava:guava:19.0-rc2" level="project" />
     <orderEntry type="library" name="Maven: org.aspectj:aspectjtools:1.8.13" level="project" />
     <orderEntry type="library" name="Maven: org.projectlombok:lombok:1.18.10" level="project" />
+    <orderEntry type="library" name="Maven: cn.hutool:hutool-all:5.3.0" level="project" />
   </component>
 </module>

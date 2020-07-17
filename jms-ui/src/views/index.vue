@@ -1,13 +1,13 @@
 <template>
   <div class="hello">
-    <el-tabs type="border-card">
+    <el-tabs type="border-card" v-model="tab">
       <el-tab-pane label="概述">
         <overview/>
       </el-tab-pane>
       <el-tab-pane label="监视">
         <monitor/>
       </el-tab-pane>
-      <el-tab-pane label="线程">
+      <el-tab-pane label="线程"  name="thread">
         <thread/>
       </el-tab-pane>
       <el-tab-pane label="抽样器">抽样器</el-tab-pane>
@@ -28,6 +28,7 @@ export default {
   name: "HelloWorld",
   data() {
     return {
+      tab:'thread',
       interval: 0
     };
   },

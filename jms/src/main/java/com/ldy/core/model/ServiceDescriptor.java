@@ -28,8 +28,13 @@ public class ServiceDescriptor {
      * 执行时间
      */
     private Date executeTime;
-
+    /**
+     * Jmx api service
+     */
     private JmxMetricsService jmxMetricsService;
+    /**
+     * 存放当前连接的一些信息
+     */
     private JmsServicePrevModel jmsServiceModel;
 
     public ServiceDescriptor(Peer peer, JMXConnector jmxConnector, MBeanServerConnection mBeanServerConnection, JmxMetricsService jmxMetricsService) {

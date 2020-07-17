@@ -11,11 +11,14 @@ import com.ldy.service.IJmsService;
 import com.ldy.vo.reponse.Response4monitorVO;
 import com.ldy.vo.reponse.Response4overviewVO;
 import com.ldy.vo.reponse.Response4threadVO;
+import com.ldy.vo.reponse.ThreadInfoVO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
 import java.lang.management.MemoryUsage;
 import java.lang.management.ThreadInfo;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -126,6 +129,7 @@ public class JmsServiceImpl implements IJmsService {
 
     @Override
     public Response4threadVO getThreadAll(ServiceDescriptor descriptor) {
+        Response4threadVO response4threadVO = new Response4threadVO();
         JmsServicePrevModel jmsServicePrevModel = descriptor.getJmsServiceModel();
         long preThreadTime = jmsServicePrevModel.getPreThreadTime();
         if(preThreadTime==-1){
@@ -137,9 +141,17 @@ public class JmsServiceImpl implements IJmsService {
         long totalStartedThreadCount = jmxMetricsService.getTotalStartedThreadCount();
         long daemonThreadCount = jmxMetricsService.getDaemonThreadCount();
         int peakThreadCount = jmxMetricsService.getPeakThreadCount();
+        Response4threadVO.ThreadCountVO threadCountVo = new Response4threadVO.ThreadCountVO(threadCount, totalStartedThreadCount, daemonThreadCount, peakThreadCount);
+        response4threadVO.setThreadCountVO(threadCountVo);
         //获取所有线程信息
         Map<Long, ThreadInfo> allThreadInfoMap = jmxMetricsService.getAllThreadInfo();
-
-        return null;
+        Map<Long, ThreadInfoVO> map =new HashMap<>(allThreadInfoMap.size()*2);
+        allThreadInfoMap.forEach((k,v)->{
+            ThreadInfoVO infoVO = new ThreadInfoVO();
+            BeanUtils.copyProperties(v,infoVO);
+            map.put(k,infoVO);
+        });
+        response4threadVO.setThreadInfoVOMap(map);
+        return response4threadVO;
     }
 }
